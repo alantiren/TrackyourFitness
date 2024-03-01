@@ -1,5 +1,6 @@
-let mongoose = require("mongoose");
-let db = require("../models");
+require('dotenv').config(); // Load environment variables from .env file
+const mongoose = require("mongoose");
+const db = require("../models");
 
 mongoose.connect(
     process.env.MONGODB_URI || 'mongodb://localhost/workout',
