@@ -1,0 +1,36 @@
+{
+  "name": "TrackyourFitness",
+  "version": "1.0.0",
+  "description": ":TrackyourFitness is a comprehensive web application designed to assist users in tracking their fitness activities and progress",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js",
+    "watch": "nodemon server.js",
+    "seed": "node seeders/seed.js"
+  },
+  "author": "Alan Tiren",
+  "dependencies": {
+    "express": "^4.17.1",
+    "mongoose": "^5.11.20",
+    "morgan": "^1.10.0"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.7"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/alantiren/TrackyourFitness.git"
+  },
+  "keywords": [
+    "fitness",
+    "track",
+    "assist"
+  ],
+  "author": "Alan Tiren",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/alantiren/TrackyourFitness/issues"
+  },
+  "homepage": "https://github.com/alantiren/TrackyourFitness#readme"
+}
