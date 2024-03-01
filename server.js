@@ -6,6 +6,9 @@ const path = require('path');
 const app = express();
 const Schema = mongoose.Schema;
 
+// Load environment variables from .env file
+require('dotenv').config();
+
 // I was spliting my files into diffrent directory, everything worked fine locally. However, 
 // when I deployed to Heroku, my server app always crash. Took my several hours to debug, I 
 // found out that I have to put the schema files and server connections in the same Javascript
@@ -113,12 +116,22 @@ const mongoParams = {
   useFindAndModify: false
 };
 
-const PORT = process.env.PORT || 3000;
-
-mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost/workout', mongoParams)
+// Connect to MongoDB
+mongoose.connect(process.env.MONGODB_URI, mongoParams)
   .then(() => {
+    // Start the server once connected to MongoDB
+    const PORT = process.env.PORT || 3000;
     app.listen(PORT, () => {
       console.log(`==> 🌎  Listening on port ${PORT}. Visit http://localhost:${PORT} in your browser.`);
     });
+  })
+  .catch(err => {
+    console.error('MongoDB connection error:', err);
+    process.exit(1); // Exit the process if MongoDB connection fails
   });
-// Server set up endss here ===========================
+
+// Other middleware and route handlers
+// ...
+
+// Export the Express app
+module.exports = app;
