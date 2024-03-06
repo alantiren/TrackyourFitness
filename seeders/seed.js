@@ -1,6 +1,8 @@
+// Require necessary dependencies and models
 let mongoose = require("mongoose");
 let db = require("../models");
 
+// Connect to MongoDB using Mongoose
 mongoose.connect(
     process.env.MONGODB_URI || 'mongodb://localhost/workout',
     {
@@ -11,6 +13,7 @@ mongoose.connect(
     }
 );
 
+// Array of workout seed data
 let workoutSeed = [
   {
     day: new Date(new Date().setDate(new Date().getDate() - 10)),
@@ -24,7 +27,7 @@ let workoutSeed = [
         sets: 4
       }
     ],
-    totalDuration: 20
+    totalDuration: 20 // Total duration of the workout
   },
   {
     day: new Date(new Date().setDate(new Date().getDate() - 9)),
@@ -138,13 +141,14 @@ let workoutSeed = [
   }
 ];
 
+// Delete existing workout data from the database, then insert the seed data
 db.Workout.deleteMany({})
   .then(() => db.Workout.collection.insertMany(workoutSeed))
   .then(data => {
-    console.log(data.result.n + " records inserted!");
-    process.exit(0);
+    console.log(data.result.n + " records inserted!"); // Log the number of records inserted
+    process.exit(0); // Exit the process with success status
   })
   .catch(err => {
-    console.error(err);
-    process.exit(1);
+    console.error(err); // Log any errors that occur during the process
+    process.exit(1); // Exit the process with error status
   });
