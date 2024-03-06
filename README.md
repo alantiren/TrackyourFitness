@@ -6,7 +6,6 @@ TrackyourFitness is a comprehensive web application designed to assist users in 
 - **Workout Logging:** Log various types of workouts, specifying details such as workout type, duration, and exercises performed.
 - **Exercise Tracking:** Track a wide range of exercises with details like sets, reps, weight, and distance for cardio activities.
 - **Progress Visualization:** Utilize Chart.js to generate visualizations like line charts and pie charts to represent workout duration, weight lifted, sets performed, and more.
-- **User Authentication:** Ensure data privacy and security with user authentication and authorization features.
 - **Responsive Design:** Enjoy optimal user experience across various devices with a responsive layout.
 
 ## Learning Objectives
