@@ -1,4 +1,3 @@
-// Selecting DOM elements
 const workoutTypeSelect = document.querySelector("#type");
 const cardioForm = document.querySelector(".cardio-form");
 const resistanceForm = document.querySelector(".resistance-form");
@@ -15,7 +14,6 @@ const addButton = document.querySelector("button.add-another");
 const toast = document.querySelector("#toast");
 const newWorkout = document.querySelector(".new-workout")
 
-// Initialize exercise
 let workoutType = null;
 let shouldNavigateAway = false;
 
@@ -23,24 +21,21 @@ async function initExercise() {
   console.log(`Function: initExercise called...`);
   let workout;
 
-  // If workout ID is not provided in the URL, create a new workout
   if (location.search.split("=")[1] === undefined) {
     workout = await API.createWorkout()
     console.log(workout)
   }
-  // Redirect to the newly created workout's page
   if (workout) {
     location.search = "?id=" + workout._id;
   }
+
 }
 
 initExercise();
 
-// Event listener for workout type change
 function handleWorkoutTypeChange(event) {
   workoutType = event.target.value;
 
-  // Show respective forms based on workout type selected
   if (workoutType === "cardio") {
     cardioForm.classList.remove("d-none");
     resistanceForm.classList.add("d-none");
@@ -52,11 +47,9 @@ function handleWorkoutTypeChange(event) {
     resistanceForm.classList.add("d-none");
   }
 
-  // Validate inputs based on selected workout type
   validateInputs();
 }
 
-// Validate inputs based on selected workout type
 function validateInputs() {
   let isValid = true;
 
@@ -64,15 +57,36 @@ function validateInputs() {
     if (nameInput.value.trim() === "") {
       isValid = false;
     }
-    // Validate other resistance inputs...
+
+    if (weightInput.value.trim() === "") {
+      isValid = false;
+    }
+
+    if (setsInput.value.trim() === "") {
+      isValid = false;
+    }
+
+    if (repsInput.value.trim() === "") {
+      isValid = false;
+    }
+
+    if (resistanceDurationInput.value.trim() === "") {
+      isValid = false;
+    }
   } else if (workoutType === "cardio") {
     if (cardioNameInput.value.trim() === "") {
       isValid = false;
     }
-    // Validate other cardio inputs...
+
+    if (durationInput.value.trim() === "") {
+      isValid = false;
+    }
+
+    if (distanceInput.value.trim() === "") {
+      isValid = false;
+    }
   }
 
-  // Enable/disable buttons based on input validation
   if (isValid) {
     completeButton.removeAttribute("disabled");
     addButton.removeAttribute("disabled");
@@ -82,26 +96,30 @@ function validateInputs() {
   }
 }
 
-// Handle form submission
 async function handleFormSubmit(event) {
   event.preventDefault();
 
   let workoutData = {};
 
-  // Prepare workout data based on selected workout type
   if (workoutType === "cardio") {
-    // Construct cardio workout data...
+    workoutData.type = "cardio";
+    workoutData.name = cardioNameInput.value.trim();
+    workoutData.distance = Number(distanceInput.value.trim());
+    workoutData.duration = Number(durationInput.value.trim());
   } else if (workoutType === "resistance") {
-    // Construct resistance workout data...
+    workoutData.type = "resistance";
+    workoutData.name = nameInput.value.trim();
+    workoutData.weight = Number(weightInput.value.trim());
+    workoutData.sets = Number(setsInput.value.trim());
+    workoutData.reps = Number(repsInput.value.trim());
+    workoutData.duration = Number(resistanceDurationInput.value.trim());
   }
 
-  // Add exercise to the workout
   await API.addExercise(workoutData);
   clearInputs();
   toast.classList.add("success");
 }
 
-// Handle toast animation end
 function handleToastAnimationEnd() {
   toast.removeAttribute("class");
   if (shouldNavigateAway) {
@@ -109,7 +127,6 @@ function handleToastAnimationEnd() {
   }
 }
 
-// Clear input fields
 function clearInputs() {
   cardioNameInput.value = "";
   nameInput.value = "";
@@ -121,7 +138,6 @@ function clearInputs() {
   weightInput.value = "";
 }
 
-// Event listeners
 if (workoutTypeSelect) {
   workoutTypeSelect.addEventListener("change", handleWorkoutTypeChange);
 }
