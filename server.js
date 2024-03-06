@@ -1,18 +1,18 @@
+// Import required modules
 const express = require('express');
 const mongoose = require('mongoose');
 const logger = require('morgan');
 const path = require('path');
 
+// Create Express application instance
 const app = express();
 const Schema = mongoose.Schema;
 
 // Load environment variables from .env file
 require('dotenv').config();
 
-// I was spliting my files into diffrent directory, everything worked fine locally. However, 
-// when I deployed to Heroku, my server app always crash. Took my several hours to debug, I 
-// found out that I have to put the schema files and server connections in the same Javascript
-// file, otherwise it does not work not Heroku. The reason still remains unknown for now, but 
+// Deployment errors  to Render, caused me to put the schema files and server connections in the same Javascript
+// file, otherwise it does not work not Render. The reason still remains unknown for now, but 
 // the best solution I can provide is to put schema and routes into this server main file. 
 
 // Originally, 
@@ -20,10 +20,12 @@ require('dotenv').config();
 // api handlers should be stored in ./routes/api-routes.js
 // html handlers should be stored in ./routes/html-routes.js
 
-// I will convert the directory structure into best practice once I figure out the reason behind the crashes on Heroku.
+// I will convert the directory structure into best practice once I figure out the reason behind the crashes on Render.
 
-// MongoDB schema starts here =============================
+// MongoDB schema definition
+// Defines the schema for the workout data to be stored in MongoDB
 const WorkoutSchema = new Schema({
+  // Schema fields for workout data
   day: {
     type: Date,
     default: Date.now
@@ -55,30 +57,38 @@ const WorkoutSchema = new Schema({
   ]
 });
 
+// Create a MongoDB model based on the schema
 const Workout = mongoose.model('workout', WorkoutSchema);
-// MongoDB schema ends here =============================
+// MongoDB schema ends here
 
-// Express middlewares starts here ======================
+// Express middlewares starts here
+// Configures middleware for logging, parsing request bodies, and serving static files
 app.use(logger('dev'));
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(express.static("public"));
 
+// Define routes for handling exercise and stats pages
 app.get('/exercise', (req, res) => {
+  // Sends the exercise page to the client
   res.sendFile(path.join(__dirname, 'public/exercise.html'));
 });
 
 app.get('/stats', (req, res) => {
+  // Sends the stats page to the client
   res.sendFile(path.join(__dirname, 'public/stats.html'));
 });
 
+// Define API routes for CRUD operations on workout data
 app.get('/api/workouts', async (req, res) => {
+  // Handles GET request for all workouts
   const result = await Workout.find({});
   res.json(result);
 });
 
 app.get('/api/workouts/range', async (req, res) => {
+  // Handles GET request for workouts within a specific range
   await Workout.deleteMany({'totalDuration': 0}); 
   await Workout.deleteMany({'exercises': {$elemMatch: {'duration': 0}}});
   const result = await Workout.find({}).sort({day: -1}).limit(7);
@@ -87,11 +97,13 @@ app.get('/api/workouts/range', async (req, res) => {
 });
 
 app.post('/api/workouts', async (req, res) => {
+  // Handles POST request to create a new workout
   const result = await Workout.create({});
   res.json(result);
 });
 
 app.put('/api/workouts/:id', async (req, res) => {
+  // Handles PUT request to update an existing workout
   const id = req.params.id;
   const data = req.body;
   const duration = data.duration;
@@ -106,9 +118,9 @@ app.put('/api/workouts/:id', async (req, res) => {
   const result = await workout.save();
   res.json(result);
 });
-// Express middlewares ends here ======================
+// Express middlewares ends here
 
-// Server set up starts here ==========================
+// Server set up starts here
 const mongoParams = {
   useNewUrlParser: true,
   useUnifiedTopology: true,
@@ -116,7 +128,8 @@ const mongoParams = {
   useFindAndModify: false
 };
 
-// Connect to MongoDB
+// MongoDB connection setup
+// Connects to MongoDB database using Mongoose
 mongoose.connect(process.env.MONGODB_URI, mongoParams)
   .then(() => {
     // Start the server once connected to MongoDB
