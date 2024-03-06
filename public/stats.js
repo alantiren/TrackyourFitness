@@ -1,3 +1,4 @@
+// Function to generate a color palette for charts
 function generatePalette() {
   const arr = [
     '#003f5c',
@@ -21,18 +22,24 @@ function generatePalette() {
   return arr;
 }
 
+// Function to populate the charts with data
 function populateChart(data) {
+  // Extract workout durations and total weight lifted
   let durations = data.map(({ totalDuration }) => totalDuration);
   let pounds = calculateTotalWeight(data);
-  let [ workouts, duration ] = getPieData(data);
-  let [ resistance, pound ] = getDonutData(data);
+
+  // Extract data for pie and doughnut charts
+  let [workouts, duration] = getPieData(data);
+  let [resistance, pound] = getDonutData(data);
   const colors = generatePalette();
 
+  // Get chart contexts
   let line = document.querySelector('#canvas').getContext('2d');
   let bar = document.querySelector('#canvas2').getContext('2d');
   let pie = document.querySelector('#canvas3').getContext('2d');
   let pie2 = document.querySelector('#canvas4').getContext('2d');
 
+  // Define days of the week
   const daysOfWeek = [
     'Sunday',
     'Monday',
@@ -43,11 +50,13 @@ function populateChart(data) {
     'Saturday',
   ];
 
+  // Extract labels for x-axis
   const labels = data.map(({ day }) => {
     const date = new Date(day);
     return daysOfWeek[date.getDay()];
   });
 
+  // Create line chart
   let lineChart = new Chart(line, {
     type: 'line',
     data: {
@@ -88,6 +97,7 @@ function populateChart(data) {
     },
   });
 
+  // Create bar chart
   let barChart = new Chart(bar, {
     type: 'bar',
     data: {
@@ -133,6 +143,7 @@ function populateChart(data) {
     },
   });
 
+  // Create pie chart
   let pieChart = new Chart(pie, {
     type: 'pie',
     data: {
@@ -153,6 +164,7 @@ function populateChart(data) {
     },
   });
 
+  // Create doughnut chart
   let donutChart = new Chart(pie2, {
     type: 'doughnut',
     data: {
@@ -174,6 +186,7 @@ function populateChart(data) {
   });
 }
 
+// Function to calculate total weight lifted
 function calculateTotalWeight(data) {
   let totals = [];
 
@@ -192,6 +205,7 @@ function calculateTotalWeight(data) {
   return totals;
 }
 
+// Function to extract data for pie chart
 function getPieData(data) {
   let workouts = [];
   let duration = [];
@@ -214,6 +228,7 @@ function getPieData(data) {
   return [workouts, duration];
 }
 
+// Function to extract data for doughnut chart
 function getDonutData(data) {
   console.log(data);
   let resistance = [];
@@ -239,5 +254,5 @@ function getDonutData(data) {
   return [resistance, pound];
 }
 
-// get all workout data from back-end
+// Fetch workout data from the back-end and populate charts
 API.getWorkoutsInRange().then(populateChart);
