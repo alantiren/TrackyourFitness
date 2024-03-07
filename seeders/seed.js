@@ -1,6 +1,6 @@
 // Import required modules
 const mongoose = require("mongoose");
-const db = require("../models/workout");
+const Workout = require("../models/workout");
 
 // Import the Workout model from the models directory
 
