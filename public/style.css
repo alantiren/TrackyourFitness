@@ -527,3 +527,7 @@ footer {
   position: relative;
   z-index: 3;
 }
+
+body {
+  background-color: transparent; /* Set background color to transparent */
+}
