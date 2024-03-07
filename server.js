@@ -1,6 +1,6 @@
 // Import required modules
 const express = require('express');
-const mongoose = require('mongoose');
+const mongodb = require('mongodb');
 const logger = require('morgan');
 const path = require('path');
 
@@ -10,7 +10,7 @@ const app = express();
 //file to load the environment variables from the .env file:
 require('dotenv').config();
 
-// Deployment errors  to Render, caused me to put the schema files and server connections in the same Javascript
+// Deployment errors to Render, caused me to put the schema files and server connections in the same Javascript
 // file, otherwise it does not work not Render. The reason still remains unknown for now, but 
 // the best solution I can provide is to put schema and routes into this server main file. 
 
@@ -23,47 +23,10 @@ require('dotenv').config();
 
 // MongoDB schema definition
 // Defines the schema for the workout data to be stored in MongoDB
-const WorkoutSchema = new mongoose.Schema({
-  // Schema fields for workout data
-  day: {
-    type: Date,
-    default: Date.now
-  },
 
-  totalDuration: {
-    type: Number,
-    default: 0
-  },
-
-  exercises: [
-    {
-      type: {
-        type: String,
-        enum: ['resistance', 'cardio']
-      },
-
-      name: {
-        type: String,
-        trim: true
-      },
-
-      distance: Number,
-      duration: Number,
-      weight: Number,
-      reps: Number,
-      sets: Number
-    }
-  ]
-});
-
-// Create a MongoDB model based on the schema
-const Workout = mongoose.model('workout', WorkoutSchema);
-// MongoDB schema ends here
-
-// Express middlewares starts here
+// Express middlewares start here
 // Configures middleware for logging, parsing request bodies, and serving static files
 app.use(logger('dev'));
-
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(express.static("public"));
@@ -79,56 +42,62 @@ app.get('/stats', (req, res) => {
   res.sendFile(path.join(__dirname, 'public/stats.html'));
 });
 
-// Define API routes for CRUD operations on workout data
-app.get('/api/workouts', async (req, res) => {
-  // Handles GET request for all workouts
-  const result = await Workout.find({});
-  res.json(result);
-});
+// Connect to MongoDB
+const MongoClient = mongodb.MongoClient;
+const mongoURI = 'mongodb://localhost:27017';
+const dbName = 'workout';
 
-app.get('/api/workouts/range', async (req, res) => {
-  // Handles GET request for workouts within a specific range
-  await Workout.deleteMany({'totalDuration': 0}); 
-  await Workout.deleteMany({'exercises': {$elemMatch: {'duration': 0}}});
-  const result = await Workout.find({}).sort({day: -1}).limit(7);
-  const reverse = result.reverse();
-  res.json(reverse);
-});
-
-app.post('/api/workouts', async (req, res) => {
-  // Handles POST request to create a new workout
-  const result = await Workout.create({});
-  res.json(result);
-});
-
-app.put('/api/workouts/:id', async (req, res) => {
-  // Handles PUT request to update an existing workout
-  const id = req.params.id;
-  const data = req.body;
-  const duration = data.duration;
-  const workout = await Workout.findOneAndUpdate(
-    { _id: id },
-    {
-      $push: { exercises: data },
-      $inc: { totalDuration: duration}
-    },
-    {new: true}
-  );
-  const result = await workout.save();
-  res.json(result);
-});
-// Express middlewares ends here
-
-// Server set up starts here
-const mongoURI = 'mongodb://localhost:27017/workout';
-mongoose.connect(mongoURI, { useNewUrlParser: true, useUnifiedTopology: true })
-  .then(() => {
-    const PORT = '3000';
-    app.listen(PORT, () => {
-      console.log(`==> 🌎  Listening on port ${PORT}. Visit http://localhost:${PORT} in your browser.`);
-    });
-  })
-  .catch(err => {
+MongoClient.connect(mongoURI, { useNewUrlParser: true, useUnifiedTopology: true }, (err, client) => {
+  if (err) {
     console.error('MongoDB connection error:', err);
     process.exit(1);
+  }
+
+  console.log('Connected to MongoDB');
+
+  const db = client.db(dbName);
+
+  // Define API routes for CRUD operations on workout data
+  app.get('/api/workouts', async (req, res) => {
+    // Handles GET request for all workouts
+    const result = await db.collection('workouts').find({}).toArray();
+    res.json(result);
   });
+
+  app.get('/api/workouts/range', async (req, res) => {
+    // Handles GET request for workouts within a specific range
+    await db.collection('workouts').deleteMany({ 'totalDuration': 0 });
+    await db.collection('workouts').deleteMany({ 'exercises': { $elemMatch: { 'duration': 0 } } });
+    const result = await db.collection('workouts').find({}).sort({ day: -1 }).limit(7).toArray();
+    const reverse = result.reverse();
+    res.json(reverse);
+  });
+
+  app.post('/api/workouts', async (req, res) => {
+    // Handles POST request to create a new workout
+    const result = await db.collection('workouts').insertOne({});
+    res.json(result.ops[0]);
+  });
+
+  app.put('/api/workouts/:id', async (req, res) => {
+    // Handles PUT request to update an existing workout
+    const id = req.params.id;
+    const data = req.body;
+    const duration = data.duration;
+    const workout = await db.collection('workouts').findOneAndUpdate(
+      { _id: mongodb.ObjectId(id) },
+      {
+        $push: { exercises: data },
+        $inc: { totalDuration: duration }
+      },
+      { returnOriginal: false }
+    );
+    res.json(workout.value);
+  });
+
+  // Start the server
+  const PORT = 3000;
+  app.listen(PORT, () => {
+    console.log(`==> 🌎  Listening on port ${PORT}. Visit http://localhost:${PORT} in your browser.`);
+  });
+});
