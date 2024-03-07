@@ -1,6 +1,30 @@
 // Import required modules
-const MongoClient = require('mongodb').MongoClient;
+const { MongoClient, ServerApiVersion } = require('mongodb');
 
+// MongoDB connection URI
+const uri = "mongodb+srv://alantiren76:TWBzluQcVhnKZnju@cluster0.lmj84nq.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
+
+// Create a MongoClient with a MongoClientOptions object to set the Stable API version
+const client = new MongoClient(uri, {
+  serverApi: {
+    version: ServerApiVersion.v1,
+    strict: true,
+    deprecationErrors: true,
+  }
+});
+
+async function run() {
+  try {
+    // Connect the client to the server	(optional starting in v4.7)
+    await client.connect();
+    // Send a ping to confirm a successful connection
+    await client.db("admin").command({ ping: 1 });
+    console.log("Pinged your deployment. You successfully connected to MongoDB!");
+
+    const db = client.db(); // Get the database
+
+    try {
+      
 // Define seed data for workouts
 const workoutSeed = [
   {
@@ -129,46 +153,28 @@ const workoutSeed = [
   }
 ];
 
-// MongoDB connection URI
-const mongoURI = 'mongodb://localhost:27017/workout';
+      // Clear existing workout data
+      await db.collection('workouts').deleteMany({});
 
-// Create a new MongoClient
-const client = new MongoClient(mongoURI, { useNewUrlParser: true, useUnifiedTopology: true });
-
-// Connect to MongoDB
-client.connect(async (err) => {
-  if (err) {
-    console.error('Error connecting to MongoDB:', err);
-    process.exit(1);
+      // Insert seed data into the database
+      const result = await db.collection('workouts').insertMany(workoutSeed);
+      
+      // Log the number of records inserted
+      console.log(result.insertedCount + " records inserted!");
+      
+      // Exit the process with a success status code
+      process.exit(0);
+    } catch (err) {
+      // Log any errors that occur during the seeding process
+      console.error('Error seeding data:', err);
+      
+      // Exit the process with an error status code
+      process.exit(1);
+    }
+  } finally {
+    // Ensures that the client will close when you finish/error
+    await client.close();
   }
-  
-  console.log('Connected to MongoDB');
+}
 
-  const db = client.db();
-
-  try {
-    // Clear existing workout data
-    await db.collection('workouts').deleteMany({});
-
-    // Insert seed data into the database
-    const result = await db.collection('workouts').insertMany(workoutSeed);
-    
-    // Log the number of records inserted
-    console.log(result.insertedCount + " records inserted!");
-    
-    // Close the connection
-    client.close();
-
-    // Exit the process with a success status code
-    process.exit(0);
-  } catch (err) {
-    // Log any errors that occur during the seeding process
-    console.error('Error seeding data:', err);
-    
-    // Close the connection
-    client.close();
-
-    // Exit the process with an error status code
-    process.exit(1);
-  }
-});
+run().catch(console.dir);
