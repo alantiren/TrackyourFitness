@@ -1,12 +1,11 @@
 // Import required modules
 const express = require('express');
-const mongodb = require('mongodb');
+const mongoose = require('mongoose');
 const logger = require('morgan');
 const path = require('path');
 
 // Create Express application instance
 const app = express();
-const Schema = mongodb.Schema;
 
 //file to load the environment variables from the .env file:
 require('dotenv').config();
@@ -24,7 +23,7 @@ require('dotenv').config();
 
 // MongoDB schema definition
 // Defines the schema for the workout data to be stored in MongoDB
-const WorkoutSchema = new Schema({
+const WorkoutSchema = new mongoose.Schema({
   // Schema fields for workout data
   day: {
     type: Date,
@@ -58,7 +57,7 @@ const WorkoutSchema = new Schema({
 });
 
 // Create a MongoDB model based on the schema
-const Workout = mongodb.model('workout', WorkoutSchema);
+const Workout = mongoose.model('workout', WorkoutSchema);
 // MongoDB schema ends here
 
 // Express middlewares starts here
@@ -122,9 +121,7 @@ app.put('/api/workouts/:id', async (req, res) => {
 
 // Server set up starts here
 const mongoURI = 'mongodb://localhost:27017/workout';
-const client = new mongodb.MongoClient(mongoURI, { useNewUrlParser: true, useUnifiedTopology: true });
-
-client.connect()
+mongoose.connect(mongoURI, { useNewUrlParser: true, useUnifiedTopology: true })
   .then(() => {
     const PORT = process.env.PORT || 3000;
     app.listen(PORT, () => {
