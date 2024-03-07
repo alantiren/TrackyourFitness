@@ -509,3 +509,21 @@ footer a:hover {
   position: relative;
   z-index: 1;
 }
+
+/* Ensure the navigation bar is on top */
+nav {
+  position: relative;
+  z-index: 2;
+}
+
+/* Ensure the footer is on top */
+footer {
+  position: relative;
+  z-index: 2;
+}
+
+/* Ensure the toast message is on top */
+#toast {
+  position: relative;
+  z-index: 3;
+}
