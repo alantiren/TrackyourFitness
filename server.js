@@ -123,7 +123,7 @@ app.put('/api/workouts/:id', async (req, res) => {
 const mongoURI = 'mongodb://localhost:27017/workout';
 mongoose.connect(mongoURI, { useNewUrlParser: true, useUnifiedTopology: true })
   .then(() => {
-    const PORT = process.env.PORT || 3000;
+    const PORT = '3000';
     app.listen(PORT, () => {
       console.log(`==> 🌎  Listening on port ${PORT}. Visit http://localhost:${PORT} in your browser.`);
     });
