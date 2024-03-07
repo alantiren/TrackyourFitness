@@ -33,22 +33,8 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(express.static("public"));
 
-// Include authentication routes
-app.use('/auth', authRoutes);
-
 // Apply authentication middleware to routes that require authentication
 app.use('/api', authMiddleware);
-
-// Define routes for handling login and signup
-app.get('/login', (req, res) => {
-  // Sends the login page to the client
-  res.sendFile(path.join(__dirname, 'public/login.html'));
-});
-
-app.get('/signup', (req, res) => {
-  // Sends the signup page to the client
-  res.sendFile(path.join(__dirname, 'public/signup.html'));
-});
 
 // Define routes for handling exercise and stats pages
 app.get('/exercise', (req, res) => {
@@ -133,6 +119,9 @@ async function startServer() {
         res.status(500).json({ error: 'An error occurred while clearing data.' });
       }
     });
+
+    // Include authentication routes
+    app.use('/auth', authRoutes);
 
     // Start the server
     const PORT = process.env.PORT || 3000;

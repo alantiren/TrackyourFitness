@@ -1,4 +1,3 @@
-//public/api.js
 const API = {
   async getLastWorkout() {
     let res;
