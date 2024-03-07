@@ -510,12 +510,6 @@ footer a:hover {
   z-index: 0; /* Change the z-index to 0 or a higher value if necessary */
 }
 
-.wrapper {
-  /* Ensure content is on top of the overlay */
-  position: relative;
-  z-index: 1;
-}
-
 /* Ensure the navigation bar is on top */
 nav {
   position: relative;
