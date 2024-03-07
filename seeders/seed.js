@@ -138,7 +138,7 @@ const client = new MongoClient(mongoURI, { useNewUrlParser: true, useUnifiedTopo
 // Connect to MongoDB
 client.connect(async (err) => {
   if (err) {
-    console.error('MongoDB connection error:', err);
+    console.error('Error connecting to MongoDB:', err);
     process.exit(1);
   }
   
@@ -163,7 +163,7 @@ client.connect(async (err) => {
     process.exit(0);
   } catch (err) {
     // Log any errors that occur during the seeding process
-    console.error(err);
+    console.error('Error seeding data:', err);
     
     // Close the connection
     client.close();
