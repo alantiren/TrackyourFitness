@@ -1,6 +1,6 @@
 // Require necessary dependencies and models
 let mongoose = require("mongoose");
-let db = require("../models");
+let db = require("public/workout.js");
 
 // Connect to MongoDB using Mongoose
 mongoose.connect(
