@@ -19,7 +19,7 @@ body {
 /* CSS styles */
 nav {
   background-color: #ffffff;
-  color: #000000;
+  color:#26502d;
   height: 80px;
   padding: 10px;
   line-height: 4;
@@ -60,8 +60,8 @@ header h1 {
 }
 
 .slogan {
-  font-size: 1rem;
-  color: #333; /* Adjust the color as needed */
+  font-size: 1.2rem;
+  color: #26502d; /* Adjust the color as needed */
   margin-top: 10px; /* Adjust the margin-top to move the slogan down */
 }
 
