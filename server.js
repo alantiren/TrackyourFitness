@@ -133,7 +133,7 @@ const mongoParams = {
 mongoose.connect(process.env.MONGODB_URI, mongoParams)
   .then(() => {
     // Start the server once connected to MongoDB
-    const PORT = process.env.PORT || 3000;
+    const PORT = process.env.PORT || 27017;
     app.listen(PORT, () => {
       console.log(`==> 🌎  Listening on port ${PORT}. Visit http://localhost:${PORT} in your browser.`);
     });
