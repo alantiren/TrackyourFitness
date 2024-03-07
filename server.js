@@ -8,6 +8,9 @@ const path = require('path');
 const app = express();
 const Schema = mongoose.Schema;
 
+//file to load the environment variables from the .env file:
+require('dotenv').config();
+
 // Deployment errors  to Render, caused me to put the schema files and server connections in the same Javascript
 // file, otherwise it does not work not Render. The reason still remains unknown for now, but 
 // the best solution I can provide is to put schema and routes into this server main file. 
