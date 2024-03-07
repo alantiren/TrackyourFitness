@@ -48,6 +48,13 @@ nav img {
   max-height: 70px; /* Adjust the maximum height as needed */
 }
 
+/* Slogan styles */
+.slogan {
+  font-size: 1rem;
+  color: #333; /* Adjust the color as needed */
+  margin-left: 10px; /* Adjust the spacing as needed */
+}
+
 header {
   height: 150px;
   padding-top: 80px;
