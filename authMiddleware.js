@@ -6,7 +6,11 @@ const User = require('./models/user'); // Import the User model
 async function authenticate(req, res, next) {
   try {
     // Extract the token from the request headers
-    const token = req.headers.authorization.split(' ')[1];
+    const authorizationHeader = req.headers.authorization;
+    if (!authorizationHeader || !authorizationHeader.startsWith('Bearer ')) {
+      return res.status(401).json({ message: 'Unauthorized: Missing or invalid token' });
+    }
+    const token = authorizationHeader.split(' ')[1];
 
     // Verify the token
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
@@ -15,14 +19,16 @@ async function authenticate(req, res, next) {
     const user = await User.findById(decoded.userId);
 
     if (!user) {
-      return res.status(401).json({ message: 'Unauthorized' });
+      return res.status(401).json({ message: 'Unauthorized: User not found' });
     }
 
     // Attach the user information to the request object
     req.user = user;
     next();
   } catch (error) {
-    return res.status(401).json({ message: 'Unauthorized' });
+    // Handle token verification errors
+    console.error('Error in authentication middleware:', error);
+    return res.status(401).json({ message: 'Unauthorized: Invalid token' });
   }
 }
 

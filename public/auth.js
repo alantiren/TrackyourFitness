@@ -2,7 +2,7 @@
 // Function to handle user signup
 async function signupUser(email, password) {
     try {
-        const response = await fetch('/api/signup', {
+        const response = await fetch('/auth/signup', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -14,7 +14,8 @@ async function signupUser(email, password) {
             const data = await response.json();
             alert(data.message); // Show success message
         } else {
-            throw new Error('Failed to signup');
+            const errorData = await response.json();
+            throw new Error(errorData.error || 'Failed to signup');
         }
     } catch (error) {
         console.error('Error signing up:', error);
@@ -25,7 +26,7 @@ async function signupUser(email, password) {
 // Function to handle user login
 async function loginUser(email, password) {
     try {
-        const response = await fetch('/api/login', {
+        const response = await fetch('/auth/login', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -39,7 +40,8 @@ async function loginUser(email, password) {
             localStorage.setItem('token', data.token); // Store token in localStorage
             window.location.href = '/dashboard'; // Redirect to dashboard page after successful login
         } else {
-            throw new Error('Failed to login');
+            const errorData = await response.json();
+            throw new Error(errorData.error || 'Failed to login');
         }
     } catch (error) {
         console.error('Error logging in:', error);
