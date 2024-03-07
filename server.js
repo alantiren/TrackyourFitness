@@ -3,8 +3,11 @@ const express = require('express');
 const logger = require('morgan');
 const path = require('path');
 const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb'); // Import ObjectId from mongodb
+const bcrypt = require('bcrypt'); // Import bcrypt for password hashing
+const jwt = require('jsonwebtoken'); // Import jwt for generating tokens
 const authMiddleware = require('./authMiddleware'); // Import authentication middleware
 const authRoutes = require('./authRoutes'); // Import authentication routes
+const User = require('./models/user'); // Import the User model
 
 // Create Express application instance
 const app = express();
@@ -48,6 +51,59 @@ app.get('/login', (req, res) => {
 app.get('/signup', (req, res) => {
   // Sends the signup page to the client
   res.sendFile(path.join(__dirname, 'public/signup.html'));
+});
+
+// Define POST route for user signup
+app.post('/signup', async (req, res) => {
+  try {
+    const { username, email, password } = req.body;
+
+    // Check if user already exists
+    const existingUser = await User.findOne({ email });
+    if (existingUser) {
+      return res.status(400).json({ message: 'User already exists.' });
+    }
+
+    // Hash the password
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    // Create new user
+    const newUser = new User({ username, email, password: hashedPassword });
+    await newUser.save();
+
+    res.status(201).json({ message: 'User created successfully.' });
+  } catch (error) {
+    console.error('Error signing up:', error);
+    res.status(500).json({ error: 'An error occurred while signing up.' });
+  }
+});
+
+// Define POST route for user login
+app.post('/login', async (req, res) => {
+  try {
+    const { email, password } = req.body;
+
+    // Find user by email
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(401).json({ message: 'Invalid email or password.' });
+    }
+
+    // Check password
+    const passwordMatch = await bcrypt.compare(password, user.password);
+    if (!passwordMatch) {
+      return res.status(401).json({ message: 'Invalid email or password.' });
+    }
+
+    // Generate token
+    const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
+
+    // Send token
+    res.status(200).json({ token });
+  } catch (error) {
+    console.error('Error logging in:', error);
+    res.status(500).json({ error: 'An error occurred while logging in.' });
+  }
 });
 
 // Define routes for handling exercise and stats pages
