@@ -1,7 +1,6 @@
 // Require necessary dependencies and models
 const mongodb = require('mongodb');
 const { MongoClient } = mongodb;
-const db = require("../models");
 
 // MongoDB connection URI
 const mongoURI = 'mongodb://localhost:27017/workout';
