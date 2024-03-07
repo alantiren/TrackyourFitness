@@ -96,8 +96,8 @@ MongoClient.connect(mongoURI, { useNewUrlParser: true, useUnifiedTopology: true 
   });
 
   // Start the server
-  const PORT = 3000;
-  app.listen(PORT, () => {
-    console.log(`==> 🌎  Listening on port ${PORT}. Visit http://localhost:${PORT} in your browser.`);
+  const PORT = process.env.PORT || 3000;
+  app.listen(PORT, '0.0.0.0',() => {
+    console.log(`Server running on port ${PORT}`);
   });
 });
