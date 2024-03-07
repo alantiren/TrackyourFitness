@@ -50,7 +50,7 @@ nav img {
 
 header {
   height: 150px;
-  padding-top: 100px; /* Adjust the padding-top to move the header down */
+  padding-top: 110px; /* Adjust the padding-top to move the header down */
   text-align: center;
   font-size: 1.5rem;
 }
@@ -62,7 +62,7 @@ header h1 {
 /* Slogan styles */
 .slogan {
   font-size: 1rem;
-  color: #333; /* Adjust the color as needed */
+  color: #05e43d; /* Adjust the color as needed */
   margin-left: 10px; /* Adjust the spacing as needed */
 }
 
