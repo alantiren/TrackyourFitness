@@ -1,12 +1,12 @@
 // Import required modules
 const express = require('express');
-const mongoose = require('mongoose');
+const mongodb = require('mongodb');
 const logger = require('morgan');
 const path = require('path');
 
 // Create Express application instance
 const app = express();
-const Schema = mongoose.Schema;
+const Schema = mongodb.Schema;
 
 //file to load the environment variables from the .env file:
 require('dotenv').config();
@@ -58,7 +58,7 @@ const WorkoutSchema = new Schema({
 });
 
 // Create a MongoDB model based on the schema
-const Workout = mongoose.model('workout', WorkoutSchema);
+const Workout = mongodb.model('workout', WorkoutSchema);
 // MongoDB schema ends here
 
 // Express middlewares starts here
@@ -121,30 +121,17 @@ app.put('/api/workouts/:id', async (req, res) => {
 // Express middlewares ends here
 
 // Server set up starts here
-const mongoParams = {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-  useCreateIndex: true,
-  useFindAndModify: false
-};
+const mongoURI = 'mongodb://localhost:27017/workout';
+const client = new mongodb.MongoClient(mongoURI, { useNewUrlParser: true, useUnifiedTopology: true });
 
-// MongoDB connection setup
-// Connects to MongoDB database using Mongoose
-mongoose.connect(process.env.MONGODB_URI, mongoParams)
+client.connect()
   .then(() => {
-    // Start the server once connected to MongoDB
-    const PORT = process.env.PORT || 27017;
+    const PORT = process.env.PORT || 3000;
     app.listen(PORT, () => {
       console.log(`==> 🌎  Listening on port ${PORT}. Visit http://localhost:${PORT} in your browser.`);
     });
   })
   .catch(err => {
     console.error('MongoDB connection error:', err);
-    process.exit(1); // Exit the process if MongoDB connection fails
+    process.exit(1);
   });
-
-// Other middleware and route handlers
-// ...
-
-// Export the Express app
-module.exports = app;
