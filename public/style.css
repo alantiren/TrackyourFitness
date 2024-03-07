@@ -33,8 +33,13 @@ a:visited {
   color: inherit;
 }
 
-nav a:hover{
+nav a:hover {
   opacity: 0.7;
+}
+
+/* Add space between nav and its child elements */
+nav > a {
+  margin-right: 10px; /* Adjust the spacing as needed */
 }
 
 header {
