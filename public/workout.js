@@ -1,35 +1,21 @@
 async function initWorkout() {
-  try {
-    const isAuthenticated = await checkAuthentication();
-    const isAuthorized = await checkAuthorization();
-  
-    if (isAuthenticated && isAuthorized) {
-      const lastWorkout = await API.getLastWorkout();
-      console.log("Last workout:", lastWorkout);
-      if (lastWorkout) {
-        document
-          .querySelector("a[href='/exercise?']")
-          .setAttribute("href", `/exercise?id=${lastWorkout._id}`);
-    
-        const workoutSummary = {
-          date: formatDate(lastWorkout.day),
-          totalDuration: lastWorkout.totalDuration,
-          numExercises: lastWorkout.exercises.length,
-          ...tallyExercises(lastWorkout.exercises)
-        };
-    
-        renderWorkoutSummary(workoutSummary);
-      } else {
-        renderNoWorkoutText()
-      }
-    } else {
-      // Redirect to login or display unauthorized message
-      window.location.href = "/login"; // Redirect to login page
-      // Or display unauthorized message
-    }
-  } catch (error) {
-    console.error('Error initializing workout:', error);
-    // Handle error, display error message, or redirect to error page
+  const lastWorkout = await API.getLastWorkout();
+  console.log("Last workout:", lastWorkout);
+  if (lastWorkout) {
+    document
+      .querySelector("a[href='/exercise?']")
+      .setAttribute("href", `/exercise?id=${lastWorkout._id}`);
+
+    const workoutSummary = {
+      date: formatDate(lastWorkout.day),
+      totalDuration: lastWorkout.totalDuration,
+      numExercises: lastWorkout.exercises.length,
+      ...tallyExercises(lastWorkout.exercises)
+    };
+
+    renderWorkoutSummary(workoutSummary);
+  } else {
+    renderNoWorkoutText()
   }
 }
 
@@ -93,44 +79,6 @@ function renderNoWorkoutText() {
 
   p.appendChild(strong);
   container.appendChild(p);
-}
-
-async function checkAuthentication() {
-  // Implement authentication check logic here
-  // Example:
-  const response = await fetch('/api/authenticate', {
-    method: 'GET',
-    headers: {
-      'Content-Type': 'application/json',
-      // Include any necessary authentication headers
-    },
-  });
-
-  if (response.ok) {
-    const data = await response.json();
-    return data.isAuthenticated;
-  } else {
-    throw new Error('Authentication failed');
-  }
-}
-
-async function checkAuthorization() {
-  // Implement authorization check logic here
-  // Example:
-  const response = await fetch('/api/authorize', {
-    method: 'GET',
-    headers: {
-      'Content-Type': 'application/json',
-      // Include any necessary authorization headers
-    },
-  });
-
-  if (response.ok) {
-    const data = await response.json();
-    return data.isAuthorized;
-  } else {
-    throw new Error('Authorization failed');
-  }
 }
 
 initWorkout();

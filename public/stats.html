@@ -1,67 +1,71 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-    <link rel="stylesheet" href="style.css">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <link
+    rel="stylesheet"
+    href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+    integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+    crossorigin="anonymous"
+    />
+    <link rel="stylesheet" href="style.css" />
     <title>Fitness Chart</title>
-</head>
-<body>
-    <nav>
-        <a href="/">
-            <img class="logo" src="Assets/trackyourfitness1.png" alt="TrackyourFitness">
-        </a>
-        <span class="spacer"></span>
-        <a href="/">TrackyourFitness</a>
-        <a href="/login">Login</a> <!-- Add login link -->
-        <a href="/signup">Signup</a> <!-- Add signup link -->
-    </nav>
+  </head>
+  <nav>
+    <a href="/">
+      <img class="logo" src="Assets/trackyourfitness1.png" alt="TrackyourFitness">
+    </a>
+    <span class="spacer"></span>
+    <a href="/">TrackyourFitness</a>
+  </nav>
 
+
+  <body>
     <div class="container mt">
-        <h1 class="text-center">Workout Dashboard</h1>
-        <div class="row mt">
-            <div class="col-md-6">
-                <canvas id="canvas"></canvas>
-            </div>
-            <div class="col-md-6">
-                <canvas id="canvas2"></canvas>
-            </div>
+      <h1 class="text-center">Workout Dashboard</h1>
+      <div class="row mt">
+        <div class="col-md-6">
+          <canvas id="canvas"></canvas>
         </div>
-        <div class="row mt">
-            <div class="col-md-6">
-                <canvas id="canvas3"></canvas>
-            </div>
-            <div class="col-md-6">
-                <canvas id="canvas4"></canvas>
-            </div>
+        <div class="col-md-6">
+          <canvas id="canvas2"></canvas>
         </div>
+      </div>
+      <div class="row mt">
+        <div class="col-md-6">
+          <canvas id="canvas3"></canvas>
+        </div>
+        <div class="col-md-6">
+          <canvas id="canvas4"></canvas>
+        </div>
+      </div>
     </div>
 
+
     <footer>
-        <h2>About:</h2>
-        <ul>
-            <li><strong>Overview:</strong> TrackyourFitness is a comprehensive web application designed to assist users in tracking their fitness activities and progress.</li>
-            <li><strong>Features:</strong> Users can log various types of workouts, including cardio and resistance training, and monitor their performance over time. The app offers workout creation, exercise addition, workout history, and detailed workout statistics.</li>
-        </ul>
-
-        <h2>Contact Us:</h2>
-        <p>
-            Alan Kipkemboi Tiren<br>
-            Athi River, Machakos County<br>
-            Phone: +254713153562 / +25708493977<br>
-            Email: tirenalan0@gmail.com<br>
-            LinkedIn: <a href="https://www.linkedin.com/in/alan-tiren-b59701164/">Alan Tiren</a><br>
-            GitHub: <a href="https://github.com/alantiren">alantiren</a>
-        </p>
-        <p>
-            © 2023 TrackyourFitness. All rights reserved.
-        </p>
+      <h2>About:</h2>
+      <ul>
+        <li><strong>Overview:</strong> TrackyourFitness is a comprehensive web application designed to assist users in tracking their fitness activities and progress.</li>
+        <li><strong>Features:</strong> Users can log various types of workouts, including cardio and resistance training, and monitor their performance over time. The app offers workout creation, exercise addition, workout history, and detailed workout statistics.</li>
+      </ul>
+    
+      <h2>Contact Us:</h2>
+      <p>
+        Alan Kipkemboi Tiren<br>
+        Athi River, Machakos County<br>
+        Phone: +254713153562 / +25708493977<br>
+        Email: tirenalan0@gmail.com<br>
+        LinkedIn: <a href="https://www.linkedin.com/in/alan-tiren-b59701164/">Alan Tiren</a><br>
+        GitHub: <a href="https://github.com/alantiren">alantiren</a>
+      </p>
+      <p>
+        © 2023 TrackyourFitness. All rights reserved.
+      </p>
     </footer>
-
     <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
     <script src="/api.js"></script>
     <script src="/stats.js"></script>
-</body>
+  </body>
 </html>
