@@ -1,13 +1,13 @@
 // Import required modules
 const express = require('express');
-const mongodb = require('mongodb');
 const logger = require('morgan');
 const path = require('path');
+const { MongoClient, ServerApiVersion } = require('mongodb');
 
 // Create Express application instance
 const app = express();
 
-//file to load the environment variables from the .env file:
+// File to load the environment variables from the .env file:
 require('dotenv').config();
 
 // Deployment errors to Render, caused me to put the schema files and server connections in the same Javascript
@@ -42,62 +42,77 @@ app.get('/stats', (req, res) => {
   res.sendFile(path.join(__dirname, 'public/stats.html'));
 });
 
-// Connect to MongoDB
-const MongoClient = mongodb.MongoClient;
-const mongoURI = 'mongodb://localhost:27017';
-const dbName = 'workout';
+// MongoDB connection URI
+const uri = "mongodb+srv://alantiren76:TWBzluQcVhnKZnju@cluster0.lmj84nq.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
 
-MongoClient.connect(mongoURI, { useNewUrlParser: true, useUnifiedTopology: true }, (err, client) => {
-  if (err) {
-    console.error('MongoDB connection error:', err);
+// Create a MongoClient with a MongoClientOptions object to set the Stable API version
+const client = new MongoClient(uri, {
+  serverApi: {
+    version: ServerApiVersion.v1,
+    strict: true,
+    deprecationErrors: true,
+  }
+});
+
+// Connect to MongoDB and start the server
+async function startServer() {
+  try {
+    // Connect the client to the server
+    await client.connect();
+    // Send a ping to confirm a successful connection
+    await client.db("admin").command({ ping: 1 });
+    console.log("Pinged your deployment. You successfully connected to MongoDB!");
+
+    const db = client.db(); // Get the database
+
+    // Define API routes for CRUD operations on workout data
+    app.get('/api/workouts', async (req, res) => {
+      // Handles GET request for all workouts
+      const result = await db.collection('workouts').find({}).toArray();
+      res.json(result);
+    });
+
+    app.get('/api/workouts/range', async (req, res) => {
+      // Handles GET request for workouts within a specific range
+      await db.collection('workouts').deleteMany({ 'totalDuration': 0 });
+      await db.collection('workouts').deleteMany({ 'exercises': { $elemMatch: { 'duration': 0 } } });
+      const result = await db.collection('workouts').find({}).sort({ day: -1 }).limit(7).toArray();
+      const reverse = result.reverse();
+      res.json(reverse);
+    });
+
+    app.post('/api/workouts', async (req, res) => {
+      // Handles POST request to create a new workout
+      const result = await db.collection('workouts').insertOne({});
+      res.json(result.ops[0]);
+    });
+
+    app.put('/api/workouts/:id', async (req, res) => {
+      // Handles PUT request to update an existing workout
+      const id = req.params.id;
+      const data = req.body;
+      const duration = data.duration;
+      const workout = await db.collection('workouts').findOneAndUpdate(
+        { _id: mongodb.ObjectId(id) },
+        {
+          $push: { exercises: data },
+          $inc: { totalDuration: duration }
+        },
+        { returnOriginal: false }
+      );
+      res.json(workout.value);
+    });
+
+    // Start the server
+    const PORT = process.env.PORT || 4000;
+    app.listen(PORT, '127.0.0.1', () => {
+      console.log(`Server running on port ${PORT}`);
+    });
+  } catch (error) {
+    console.error('Error connecting to MongoDB:', error);
     process.exit(1);
   }
+}
 
-  console.log('Connected to MongoDB');
-
-  const db = client.db(dbName);
-
-  // Define API routes for CRUD operations on workout data
-  app.get('/api/workouts', async (req, res) => {
-    // Handles GET request for all workouts
-    const result = await db.collection('workouts').find({}).toArray();
-    res.json(result);
-  });
-
-  app.get('/api/workouts/range', async (req, res) => {
-    // Handles GET request for workouts within a specific range
-    await db.collection('workouts').deleteMany({ 'totalDuration': 0 });
-    await db.collection('workouts').deleteMany({ 'exercises': { $elemMatch: { 'duration': 0 } } });
-    const result = await db.collection('workouts').find({}).sort({ day: -1 }).limit(7).toArray();
-    const reverse = result.reverse();
-    res.json(reverse);
-  });
-
-  app.post('/api/workouts', async (req, res) => {
-    // Handles POST request to create a new workout
-    const result = await db.collection('workouts').insertOne({});
-    res.json(result.ops[0]);
-  });
-
-  app.put('/api/workouts/:id', async (req, res) => {
-    // Handles PUT request to update an existing workout
-    const id = req.params.id;
-    const data = req.body;
-    const duration = data.duration;
-    const workout = await db.collection('workouts').findOneAndUpdate(
-      { _id: mongodb.ObjectId(id) },
-      {
-        $push: { exercises: data },
-        $inc: { totalDuration: duration }
-      },
-      { returnOriginal: false }
-    );
-    res.json(workout.value);
-  });
-
-  // Start the server
-  const PORT = process.env.PORT || 4000;
-  app.listen(PORT, '127.0.0.1',() => {
-    console.log(`Server running on port ${PORT}`);
-  });
-});
+// Call the function to start the server
+startServer();
