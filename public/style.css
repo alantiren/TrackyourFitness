@@ -42,6 +42,12 @@ nav > a {
   margin-right: 30px; /* Adjust the spacing as needed */
 }
 
+/* Resize the image */
+nav img {
+  max-width: 60px; /* Adjust the maximum width as needed */
+  max-height: 60px; /* Adjust the maximum height as needed */
+}
+
 header {
   height: 150px;
   padding-top: 80px;
