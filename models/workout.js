@@ -1,3 +1,4 @@
+//models/workout.js
 const mongoose = require('mongoose');
 
 // Define schema for the Workout model

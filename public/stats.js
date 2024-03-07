@@ -1,3 +1,4 @@
+// public/stats.js
 function generatePalette() {
   const arr = [
     '#003f5c',

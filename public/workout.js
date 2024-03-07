@@ -1,3 +1,4 @@
+// public/workout.js
 async function initWorkout() {
   const lastWorkout = await API.getLastWorkout();
   console.log("Last workout:", lastWorkout);
@@ -34,6 +35,7 @@ function tallyExercises(exercises) {
 }
 
 function formatDate(date) {
+  console.log("Date before formatting:", date);
   const options = {
     weekday: "long",
     year: "numeric",
