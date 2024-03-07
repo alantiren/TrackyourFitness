@@ -12,27 +12,48 @@ const distanceInput = document.querySelector("#distance");
 const completeButton = document.querySelector("button.complete");
 const addButton = document.querySelector("button.add-another");
 const toast = document.querySelector("#toast");
-const newWorkout = document.querySelector(".new-workout")
+const newWorkout = document.querySelector(".new-workout");
 
 let workoutType = null;
 let shouldNavigateAway = false;
 
+// Function to check if the user is authenticated
+async function checkAuth() {
+  try {
+    const response = await fetch("/api/auth/check", {
+      method: "GET",
+      credentials: "same-origin",
+    });
+    const data = await response.json();
+    return data.authenticated;
+  } catch (error) {
+    console.error("Error checking authentication:", error);
+    return false;
+  }
+}
+
+// Function to handle exercise initialization
 async function initExercise() {
   console.log(`Function: initExercise called...`);
+  const isAuthenticated = await checkAuth();
+  if (!isAuthenticated) {
+    // Redirect to login page or display a message indicating the user is not logged in
+    console.log("User is not authenticated. Redirecting to login page...");
+    // Example: window.location.href = "/login";
+    return;
+  }
   let workout;
 
   if (location.search.split("=")[1] === undefined) {
-    workout = await API.createWorkout()
-    console.log(workout)
+    workout = await API.createWorkout();
+    console.log(workout);
   }
   if (workout) {
     location.search = "?id=" + workout._id;
   }
-
 }
 
-initExercise();
-
+// Function to handle change in workout type
 function handleWorkoutTypeChange(event) {
   workoutType = event.target.value;
 
@@ -50,6 +71,7 @@ function handleWorkoutTypeChange(event) {
   validateInputs();
 }
 
+// Function to validate input fields
 function validateInputs() {
   let isValid = true;
 
@@ -96,6 +118,7 @@ function validateInputs() {
   }
 }
 
+// Function to handle form submission
 async function handleFormSubmit(event) {
   event.preventDefault();
 
@@ -120,6 +143,7 @@ async function handleFormSubmit(event) {
   toast.classList.add("success");
 }
 
+// Function to handle animation end event of toast
 function handleToastAnimationEnd() {
   toast.removeAttribute("class");
   if (shouldNavigateAway) {
@@ -127,6 +151,7 @@ function handleToastAnimationEnd() {
   }
 }
 
+// Function to clear input fields
 function clearInputs() {
   cardioNameInput.value = "";
   nameInput.value = "";
@@ -138,20 +163,37 @@ function clearInputs() {
   weightInput.value = "";
 }
 
+// Event listeners
 if (workoutTypeSelect) {
   workoutTypeSelect.addEventListener("change", handleWorkoutTypeChange);
 }
 if (completeButton) {
-  completeButton.addEventListener("click", function (event) {
+  completeButton.addEventListener("click", async function (event) {
+    const isAuthenticated = await checkAuth();
+    if (!isAuthenticated) {
+      // Redirect to login page or display a message indicating the user is not logged in
+      console.log("User is not authenticated. Redirecting to login page...");
+      // Example: window.location.href = "/login";
+      return;
+    }
     shouldNavigateAway = true;
     handleFormSubmit(event);
   });
 }
 if (addButton) {
-  addButton.addEventListener("click", handleFormSubmit);
+  addButton.addEventListener("click", async function (event) {
+    const isAuthenticated = await checkAuth();
+    if (!isAuthenticated) {
+      // Redirect to login page or display a message indicating the user is not logged in
+      console.log("User is not authenticated. Redirecting to login page...");
+      // Example: window.location.href = "/login";
+      return;
+    }
+    handleFormSubmit(event);
+  });
 }
 toast.addEventListener("animationend", handleToastAnimationEnd);
 
 document
   .querySelectorAll("input")
-  .forEach(element => element.addEventListener("input", validateInputs));
+  .forEach((element) => element.addEventListener("input", validateInputs));

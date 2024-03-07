@@ -3,6 +3,8 @@ const express = require('express');
 const logger = require('morgan');
 const path = require('path');
 const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb'); // Import ObjectId from mongodb
+const authMiddleware = require('./authMiddleware'); // Import authentication middleware
+const authRoutes = require('./authRoutes'); // Import authentication routes
 
 // Create Express application instance
 const app = express();
@@ -30,6 +32,9 @@ app.use(logger('dev'));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(express.static("public"));
+
+// Apply authentication middleware to routes that require authentication
+app.use('/api', authMiddleware);
 
 // Define routes for handling exercise and stats pages
 app.get('/exercise', (req, res) => {
@@ -114,6 +119,9 @@ async function startServer() {
         res.status(500).json({ error: 'An error occurred while clearing data.' });
       }
     });
+
+    // Include authentication routes
+    app.use('/auth', authRoutes);
 
     // Start the server
     const PORT = process.env.PORT || 3000;

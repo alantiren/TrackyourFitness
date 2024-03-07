@@ -8,7 +8,7 @@ async function init() {
     if (workout) {
       location.search = "?id=" + workout._id;
     } else {
-      document.querySelector("#continue-btn").classList.add("d-none")
+      document.querySelector("#continue-btn").classList.add("d-none");
     }
   }
   
@@ -30,6 +30,15 @@ async function init() {
         console.error('Error clearing data:', error);
         alert('An error occurred while clearing data.');
       }
+    });
+  }
+  
+  // Add event listener for logout button
+  const logoutBtn = document.getElementById('logoutBtn');
+  if (logoutBtn) {
+    logoutBtn.addEventListener('click', () => {
+      // Perform logout operation here
+      console.log('Logout button clicked');
     });
   }
 }
