@@ -44,8 +44,8 @@ nav > a {
 
 /* Resize the image */
 nav img {
-  max-width: 60px; /* Adjust the maximum width as needed */
-  max-height: 60px; /* Adjust the maximum height as needed */
+  max-width: 70px; /* Adjust the maximum width as needed */
+  max-height: 70px; /* Adjust the maximum height as needed */
 }
 
 header {
