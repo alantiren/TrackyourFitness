@@ -2,7 +2,7 @@
 const express = require('express');
 const logger = require('morgan');
 const path = require('path');
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb'); // Import ObjectId from mongodb
 
 // Create Express application instance
 const app = express();
@@ -93,7 +93,7 @@ async function startServer() {
       const data = req.body;
       const duration = data.duration;
       const workout = await db.collection('workouts').findOneAndUpdate(
-        { _id: mongodb.ObjectId(id) },
+        { _id: ObjectId(id) }, // Use ObjectId here
         {
           $push: { exercises: data },
           $inc: { totalDuration: duration }
