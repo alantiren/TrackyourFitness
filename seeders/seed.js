@@ -1,5 +1,8 @@
+//seed.js
+
 // Import required modules
 const { MongoClient, ServerApiVersion } = require('mongodb');
+const bcrypt = require('bcrypt'); // Import bcrypt for password hashing
 
 // MongoDB connection URI
 const uri = "mongodb+srv://alantiren76:TWBzluQcVhnKZnju@cluster0.lmj84nq.mongodb.net/";
@@ -25,7 +28,7 @@ async function run() {
     const db = client.db(); // Get the database
 
     try {
-      
+
 // Define seed data for workouts
 const workoutSeed = [
   {
@@ -154,28 +157,49 @@ const workoutSeed = [
   }
 ];
 
+      // Define seed data for users
+      const userSeed = [
+        {
+          username: 'user1',
+          email: 'user1@example.com',
+          // Hashed password for "password123"
+          password: await bcrypt.hash('password123', 10)
+        },
+        {
+          username: 'user2',
+          email: 'user2@example.com',
+          // Hashed password for "password456"
+          password: await bcrypt.hash('password456', 10)
+        }
+        // Add more user data as needed
+      ];
+
       // Clear existing workout data
       await db.collection('workouts').deleteMany({});
+      // Clear existing user data
+      await db.collection('users').deleteMany({});
 
       // Insert seed data into the database
-      const result = await db.collection('workouts').insertMany(workoutSeed);
-      
+      await db.collection('workouts').insertMany(workoutSeed);
+      await db.collection('users').insertMany(userSeed);
+
       // Log the number of records inserted
-      console.log(result.insertedCount + " records inserted!");
-      
+      console.log(workoutSeed.length + " workout records inserted!");
+      console.log(userSeed.length + " user records inserted!");
+
       // Exit the process with a success status code
       process.exit(0);
     } catch (err) {
       // Log any errors that occur during the seeding process
       console.error('Error seeding data:', err);
-      
       // Exit the process with an error status code
       process.exit(1);
     }
   } finally {
-    // Ensures that the client will close when you finish/error
+    // Ensure that the client will close when you finish/error
     await client.close();
   }
 }
 
+// Call the function to seed the database
 run().catch(console.dir);
