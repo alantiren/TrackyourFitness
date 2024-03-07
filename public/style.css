@@ -50,7 +50,7 @@ nav img {
 
 header {
   height: 150px;
-  padding-top: 80px;
+  padding-top: 100px; /* Adjust the padding-top to move the header down */
   text-align: center;
   font-size: 1.5rem;
 }
