@@ -1,3 +1,6 @@
+// Import required modules
+const MongoClient = require('mongodb').MongoClient;
+
 // Define seed data for workouts
 const workoutSeed = [
   {
@@ -126,48 +129,46 @@ const workoutSeed = [
   }
 ];
 
-// Import required modules
-const mongoose = require("mongoose");
-const Workout = require("../models/workout");
-
-// Import the Workout model from the models directory
-
 // MongoDB connection URI
 const mongoURI = 'mongodb://localhost:27017/workout';
 
-// Connect to MongoDB using Mongoose
-mongoose.connect(mongoURI, { useNewUrlParser: true, useUnifiedTopology: true });
+// Create a new MongoClient
+const client = new MongoClient(mongoURI, { useNewUrlParser: true, useUnifiedTopology: true });
 
-// Event listener for successful MongoDB connection
-mongoose.connection.once('open', async () => {
-  console.log('Connected to MongoDB');
+// Connect to MongoDB
+client.connect(async (err) => {
+  if (err) {
+    console.error('MongoDB connection error:', err);
+    process.exit(1);
+  }
   
+  console.log('Connected to MongoDB');
+
+  const db = client.db();
+
   try {
     // Clear existing workout data
-    await Workout.deleteMany({});
+    await db.collection('workouts').deleteMany({});
 
     // Insert seed data into the database
-    const result = await Workout.collection.insertMany(workoutSeed);
+    const result = await db.collection('workouts').insertMany(workoutSeed);
     
     // Log the number of records inserted
     console.log(result.insertedCount + " records inserted!");
     
+    // Close the connection
+    client.close();
+
     // Exit the process with a success status code
     process.exit(0);
   } catch (err) {
     // Log any errors that occur during the seeding process
     console.error(err);
     
+    // Close the connection
+    client.close();
+
     // Exit the process with an error status code
     process.exit(1);
   }
-});
-
-// Event listener for MongoDB connection errors
-mongoose.connection.on('error', (err) => {
-  // Log the MongoDB connection error
-  console.error('MongoDB connection error:', err);
-  
-  // Exit the process with an error status code
-  process.exit(1);
 });
