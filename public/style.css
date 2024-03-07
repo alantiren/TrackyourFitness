@@ -1,3 +1,9 @@
+/* Set body background color to transparent */
+body {
+  background-color: transparent;
+}
+
+/* Rest of your CSS styles */
 *,
 *::before,
 *::after {
@@ -526,8 +532,4 @@ footer {
 #toast {
   position: relative;
   z-index: 3;
-}
-
-body {
-  background-color: transparent; /* Set background color to transparent */
 }
