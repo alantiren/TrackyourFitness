@@ -39,7 +39,7 @@ nav a:hover {
 
 /* Add space between nav and its child elements */
 nav > a {
-  margin-right: 10px; /* Adjust the spacing as needed */
+  margin-right: 30px; /* Adjust the spacing as needed */
 }
 
 header {
