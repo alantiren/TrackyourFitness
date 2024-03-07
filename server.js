@@ -104,6 +104,17 @@ async function startServer() {
       res.json(workout.value);
     });
 
+    // Define route to clear all data from the collection
+    app.delete('/api/workouts', async (req, res) => {
+      try {
+        const result = await db.collection('workouts').deleteMany({});
+        res.json({ message: 'All data cleared successfully.' });
+      } catch (error) {
+        console.error('Error clearing data:', error);
+        res.status(500).json({ error: 'An error occurred while clearing data.' });
+      }
+    });
+
     // Start the server
     const PORT = process.env.PORT || 3000;
     app.listen(PORT, () => {
