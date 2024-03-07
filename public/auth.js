@@ -1,3 +1,4 @@
+//public/auth.js
 // Function to handle user signup
 async function signupUser(email, password) {
     try {

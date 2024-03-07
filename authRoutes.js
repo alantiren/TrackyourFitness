@@ -1,4 +1,4 @@
-// authRoutes.js
+//authRoutes.js
 // Import required modules
 const express = require('express');
 const bcrypt = require('bcrypt');
@@ -71,18 +71,6 @@ router.post('/login', async (req, res) => {
     res.status(500).json({ error: 'An error occurred during user login.' });
   }
 });
-
-// Logout Route: Endpoint for user logout
-router.post('/logout', (req, res) => {
-    try {
-      // Clear the token cookie to log out the user
-      res.clearCookie('token');
-      res.status(200).json({ message: 'Logged out successfully.' });
-    } catch (error) {
-      console.error('Error during user logout:', error);
-      res.status(500).json({ error: 'An error occurred during user logout.' });
-    }
-  });
 
 // Export the router
 module.exports = router;
