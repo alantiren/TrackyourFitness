@@ -490,3 +490,22 @@ footer a {
 footer a:hover {
   text-decoration: underline;
 }
+
+.blur-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url('/public/Assets/fitnessandworkout.png');
+  background-size: cover;
+  background-position: center;
+  filter: blur(10px); /* Adjust the blur amount as needed */
+  z-index: -1;
+}
+
+.wrapper {
+  /* Ensure content is on top of the overlay */
+  position: relative;
+  z-index: 1;
+}
