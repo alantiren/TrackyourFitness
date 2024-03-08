@@ -93,14 +93,14 @@ select::-ms-expand {
 }
 
 select:hover {
-  border-color: #888;
+  border-color: transparent;
 }
 
 select:focus {
-  border-color: #aaa;
+  border-color: transparent;
   box-shadow: 0 0 1px 3px rgba(59, 153, 252, 0.7);
   box-shadow: 0 0 0 3px -moz-mac-focusring;
-  color: #222;
+  color: #000000;
   outline: none;
 }
 
