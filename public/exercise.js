@@ -23,13 +23,14 @@ async function initExercise() {
   let workout;
 
   if (location.search.split("=")[1] === undefined) {
-    workout = await API.createWorkout()
-    console.log(workout)
+    // Create a new workout with the current date
+    workout = await API.createWorkout({ day: new Date() });
+    console.log(workout);
   }
+
   if (workout) {
     location.search = "?id=" + workout._id;
   }
-
 }
 
 initExercise();
