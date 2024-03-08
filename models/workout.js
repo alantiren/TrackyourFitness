@@ -42,6 +42,18 @@ const Workout = {
     }
   },
 
+  // Method to find the last workout
+  async findLastWorkout() {
+    try {
+      const db = client.db();
+      const lastWorkout = await db.collection('workouts').find().sort({ day: -1 }).limit(1).toArray();
+      return lastWorkout.length > 0 ? lastWorkout[0].day : new Date(); // Return the date of the last workout or current date
+    } catch (error) {
+      console.error("Error finding last workout:", error);
+      throw error;
+    }
+  },
+
   // Method to find and update a workout by ID
   async findByIdAndUpdate(id, data) {
     try {

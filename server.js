@@ -81,9 +81,19 @@ async function startServer() {
     });
 
     app.post('/api/workouts', async (req, res) => {
-      // Handles POST request to create a new workout
-      const result = await db.collection('workouts').insertOne({});
-      res.json(result.ops[0]);
+      try {
+        // Get the date of the last workout
+        const lastWorkout = await db.collection('workouts').findOne({}, { sort: { day: -1 } });
+        const lastWorkoutDate = lastWorkout ? new Date(lastWorkout.day) : new Date();
+    
+        // Create a new workout with the appropriate date
+        const newWorkout = await db.collection('workouts').insertOne({ day: lastWorkoutDate, exercises: [] });
+    
+        res.json(newWorkout.ops[0]);
+      } catch (error) {
+        console.error('Error creating new workout:', error);
+        res.status(500).json({ error: 'An error occurred while creating a new workout.' });
+      }
     });
 
     app.put('/api/workouts/:id', async (req, res) => {
