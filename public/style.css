@@ -116,10 +116,10 @@ input {
   appearance: none;
   font-size: 1rem;
   border-radius: 6px;
-  border: 1px solid #aaa;
+  border: 1px solid transparent;
   width: 100%;
   padding: 10px;
-  background: linear-gradient(to bottom, #ffffff 0%, #e5e5e5 100%);
+  background: linear-gradient(to bottom, transparent 0%, transparent 100%);
 }
 
 .wrapper {
