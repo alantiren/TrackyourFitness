@@ -48,7 +48,7 @@ npm install
 npm start
 ```
 
-2. Open your web browser and navigate to `http://localhost:3000` to access TrackyourFitness.
+2. Open this fitness link using this URL https://trackyourfitness-iaof.onrender.com
 
 ## Contributing
 
