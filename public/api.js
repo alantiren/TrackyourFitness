@@ -27,15 +27,15 @@ const API = {
   async createWorkout(data = {}) {
     const res = await fetch("/api/workouts", {
       method: "POST",
-      body: JSON.stringify(data),
+      body: JSON.stringify({ ...data, day: new Date() }), // Include the current date as 'day'
       headers: { "Content-Type": "application/json" }
     });
-
+  
     const json = await res.json();
-
+  
     return json;
   },
-
+  
   async getWorkoutsInRange() {
     const res = await fetch(`/api/workouts/range`);
     const json = await res.json();
