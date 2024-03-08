@@ -1,6 +1,6 @@
 //models/workout.js
-// Define schema for the Workout model
-const workoutSchema = new mongoose.Schema({
+// Define the schema for the Workout model
+const workoutSchema = {
   day: {
     type: Date,
     default: Date.now
@@ -35,17 +35,6 @@ const workoutSchema = new mongoose.Schema({
     type: Number,
     default: 0
   }
-});
+};
 
-// Calculate total duration before saving
-workoutSchema.pre('save', function(next) {
-  this.totalDuration = this.exercises.reduce((total, exercise) => {
-    return total + exercise.duration;
-  }, 0);
-  next();
-});
-
-// Create Workout model based on the schema
-const Workout = mongoose.model('Workout', workoutSchema);
-
-module.exports = Workout;
+module.exports = workoutSchema;
