@@ -17,14 +17,10 @@ require('dotenv').config();
 // the best solution I can provide is to put schema and routes into this server main file. 
 
 // Originally, 
-// schema should be stored in ./models/workout.js
 // api handlers should be stored in ./routes/api-routes.js
 // html handlers should be stored in ./routes/html-routes.js
 
 // I will convert the directory structure into best practice once I figure out the reason behind the crashes on Render.
-
-// MongoDB schema definition
-// Defines the schema for the workout data to be stored in MongoDB
 
 // Express middlewares start here
 // Configures middleware for logging, parsing request bodies, and serving static files
