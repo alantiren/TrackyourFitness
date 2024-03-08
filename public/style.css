@@ -532,3 +532,9 @@ footer {
   position: relative;
   z-index: 1;
 }
+
+.workout-stats,
+.workout-dashboard {
+  position: relative;
+  z-index: 2; /* Ensure it appears in front of the background */
+}
