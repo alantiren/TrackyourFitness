@@ -33,3 +33,19 @@ async function init() {
     });
   }
 }
+
+//toggle the visibility of the contact information when the button is clicked
+document.addEventListener("DOMContentLoaded", function () {
+  const toggleContactBtn = document.getElementById("toggleContactBtn");
+  const contactInfo = document.getElementById("contactInfo");
+
+  toggleContactBtn.addEventListener("click", function () {
+    if (contactInfo.style.display === "none") {
+      contactInfo.style.display = "block";
+      toggleContactBtn.textContent = "Hide Contact";
+    } else {
+      contactInfo.style.display = "none";
+      toggleContactBtn.textContent = "Contact Us";
+    }
+  });
+});
