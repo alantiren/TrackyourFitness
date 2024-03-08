@@ -34,7 +34,6 @@ function tallyExercises(exercises) {
   }, {});
   return tallied;
 }
-
 function formatDate(dateString) {
   console.log("Date before formatting:", dateString);
   
