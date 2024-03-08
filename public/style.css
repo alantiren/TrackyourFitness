@@ -506,7 +506,7 @@ footer a:hover {
   background-image: url('Assets/fitnessandworkout.png');
   background-size: cover;
   background-position: center;
-  filter: blur(0px); /* Adjust the blur amount as needed */
+  filter: blur(5px); /* Adjust the blur amount as needed */
   z-index: 0; /* Change the z-index to 0 or a higher value if necessary */
 }
 
