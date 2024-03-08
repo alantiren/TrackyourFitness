@@ -4,6 +4,7 @@ const express = require('express');
 const logger = require('morgan');
 const path = require('path');
 const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb'); // Import ObjectId from mongodb
+const Workout = require('./models/workout');
 
 // Create Express application instance
 const app = express();
