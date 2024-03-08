@@ -464,9 +464,9 @@ form > button {
 }
 
 footer {
-  background-color: #f2f2f2;
+  background-color: transparent;
   padding: 20px;
-  text-align: center;
+  text-align: left;
   margin-top: 20px;
 }
 
