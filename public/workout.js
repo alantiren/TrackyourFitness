@@ -1,4 +1,5 @@
 // public/workout.js
+
 async function initWorkout() {
   const lastWorkout = await API.getLastWorkout();
   console.log("Last workout:", lastWorkout);
@@ -34,16 +35,31 @@ function tallyExercises(exercises) {
   return tallied;
 }
 
-function formatDate(date) {
-  console.log("Date before formatting:", date);
-  const options = {
+function formatDate(dateString) {
+  console.log("Date before formatting:", dateString);
+  
+  // Check if dateString is already a Date object
+  if (dateString instanceof Date) {
+    return dateString.toLocaleDateString(getLocaleDateStringOptions());
+  }
+  
+  const date = new Date(dateString);
+  
+  // Check if the date is valid
+  if (isNaN(date.getTime())) {
+    return "Invalid Date";
+  }
+
+  return date.toLocaleDateString(getLocaleDateStringOptions());
+}
+
+function getLocaleDateStringOptions() {
+  return {
     weekday: "long",
     year: "numeric",
     month: "long",
     day: "numeric"
   };
-
-  return new Date(date).toLocaleDateString(options);
 }
 
 function renderWorkoutSummary(summary) {
