@@ -1,6 +1,4 @@
 //models/workout.js
-const mongoose = require('mongoose');
-
 // Define schema for the Workout model
 const workoutSchema = new mongoose.Schema({
   day: {
