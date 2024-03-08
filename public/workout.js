@@ -40,13 +40,16 @@ function formatDate(dateString) {
   
   // Check if dateString is already a Date object
   if (dateString instanceof Date) {
+    console.log("Date is already a Date object");
     return dateString.toLocaleDateString(getLocaleDateStringOptions());
   }
   
   const date = new Date(dateString);
-  
+  console.log("Parsed date:", date);
+
   // Check if the date is valid
   if (isNaN(date.getTime())) {
+    console.log("Invalid date format");
     return "Invalid Date";
   }
 
